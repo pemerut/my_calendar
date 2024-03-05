@@ -6,14 +6,6 @@ use App\Entity\Appointment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Appointment>
- *
- * @method Appointment|null find($id, $lockMode = null, $lockVersion = null)
- * @method Appointment|null findOneBy(array $criteria, array $orderBy = null)
- * @method Appointment[]    findAll()
- * @method Appointment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class AppointmentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -21,28 +13,29 @@ class AppointmentRepository extends ServiceEntityRepository
         parent::__construct($registry, Appointment::class);
     }
 
-//    /**
-//     * @return Appointment[] Returns an array of Appointment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param \DateTimeInterface $date
+     * @return Appointment[]
+     */
+    public function findByDate(\DateTimeInterface $date): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.date = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Appointment
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return Appointment|null
+     */
+    public function findNextAvailable(): ?Appointment
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.date > CURRENT_TIMESTAMP()')
+            ->orderBy('a.date', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

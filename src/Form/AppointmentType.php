@@ -16,11 +16,11 @@ class AppointmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date')
-            ->add('patientName')
-            ->add('email')
-            ->add('phone')
-        ;
+            ->add('date', DateTimeType::class)
+            ->add('patientName', TextType::class)
+            ->add('email', EmailType::class)
+            ->add('phone', TextType::class)
+            ->add('save', SubmitType::class, ['label' => 'Schedule Appointment']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

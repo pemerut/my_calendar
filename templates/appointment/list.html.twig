@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of Appointments{% endblock %}
+
+{% block body %}
+<h2>Appointments</h2>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Patient Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Actions</th>
+    </tr>
+    {% for appointment in appointments %}
+    <tr>
+        <td>{{ appointment.date|date('Y-m-d H:i') }}</td>
+        <td>{{ appointment.patientName }}</td>
+        <td>{{ appointment.email }}</td>
+        <td>{{ appointment.phone }}</td>
+        <td>
+            <a href="{{ path('appointment_reschedule', {'id': appointment.id}) }}">Reschedule</a>
+            <a href="{{ path('appointment_cancel', {'id': appointment.id}) }}" onclick="return confirm('Are you sure?')">Cancel</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
